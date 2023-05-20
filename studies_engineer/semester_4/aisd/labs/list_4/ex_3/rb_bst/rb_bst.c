@@ -11,6 +11,18 @@ bool BLACK = false;
 char* trace_l; 
 char* trace_r; 
 
+int comp_ints(RBTree* tree, int i1, int i2) {
+    tree -> comparisons++;
+
+    if (i1 == i2) {
+        return 0;
+    } else if (i1 > i2) {
+        return 1;
+    } else {
+        return -1;
+    }    
+}
+
 RBTree* RBT_create_tree() {
     RBTree *tree = (RBTree*) malloc(sizeof(RBTree));
     Node *nil = (Node*) malloc(sizeof(Node));
@@ -24,6 +36,7 @@ RBTree* RBT_create_tree() {
     tree -> NIL = nil;
     tree -> root = tree -> NIL;
     tree -> size = 0;
+    tree -> comparisons = 0;
 
     return tree;
 }
@@ -32,7 +45,7 @@ Node* RBT_search(RBTree* tree, int key) {
     Node* node = tree -> root;
 
     while (node != tree -> NIL && key != node -> key) {
-        if (key < node -> key) {
+        if (comp_ints(tree, key, node -> key) == -1) {
             node = node -> left;
         } else {
             node = node -> right;
@@ -248,7 +261,7 @@ Node* BST_insert(Node *root, Node *node, RBTree *tree) {
         return node;
     }
 
-    if (node -> key < root -> key) {
+    if (comp_ints(tree, node -> key, root -> key) == -1) {
         root -> left = BST_insert(root -> left, node, tree);
         root -> left -> parent = root;
     } else {
@@ -322,7 +335,7 @@ void RBT_insert(RBTree* tree, int key, bool verbose) {
 
     while (temp != tree -> NIL) {
         y = temp; 
-        if(z -> key < temp -> key) {
+        if(comp_ints(tree, z -> key, temp -> key) == -1) {
             temp = temp->left;
         } else {
             temp = temp -> right;
@@ -333,7 +346,7 @@ void RBT_insert(RBTree* tree, int key, bool verbose) {
 
     if(y == NULL) { 
         tree -> root = z;
-    } else if(z -> key < y -> key) {
+    } else if(comp_ints(tree, z -> key, y -> key) == -1) {
         y -> left = z;
     } else {
         y -> right = z;
@@ -393,4 +406,9 @@ void RBT_print(RBTree* tree) {
     RBT_print_handler(tree -> root, 0, '-', tree);
     printf("------------------ Tree ------------------\n");
     printf("\n");
+}
+
+void RBT_print_stats(RBTree* tree) {
+    printf("COMPARISONS: %lld\n", tree -> comparisons);
+    printf("HEIGHT: %d\n", RBT_height(tree));
 }

@@ -13,6 +13,7 @@ struct node {
 struct bstree {
     Node* root;
     int size;
+    long long comparisons;
 };
 
 BSTree* BST_create_tree();
@@ -20,5 +21,6 @@ void BST_insert(BSTree* tree, int key, bool verbose);
 int BST_delete(BSTree* tree, int key, bool verbose);
 int BST_height(BSTree* tree);
 void BST_print(BSTree* tree);
+void BST_print_stats(BSTree* tree);
 
 #endif

@@ -18,6 +18,7 @@ struct tree {
     Node* root;
     Node* NIL;
     int size;
+    long long comparisons;
 };
 
 RBTree* RBT_create_tree();
@@ -25,5 +26,6 @@ void RBT_insert(RBTree* tree, int key, bool verbose);
 int RBT_delete(RBTree* tree, int key, bool verbose);
 int RBT_height(RBTree* tree);
 void RBT_print(RBTree* tree);
+void RBT_print_stats(RBTree* tree);
 
 #endif

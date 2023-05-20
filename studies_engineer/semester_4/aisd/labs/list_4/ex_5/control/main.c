@@ -36,5 +36,7 @@ int main() {
         }
     }
 
+    SPT_print_stats(tree);
+
     return 0;
 }

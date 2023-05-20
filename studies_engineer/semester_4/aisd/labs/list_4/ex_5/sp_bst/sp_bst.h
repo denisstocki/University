@@ -15,6 +15,7 @@ struct node {
 struct sptree {
     Node* root;
     int size;
+    long long comparisons;
 };
 
 SPTree* SPT_create_tree();
@@ -22,5 +23,6 @@ void SPT_insert(SPTree* tree, int key, bool verbose);
 int SPT_delete(SPTree* tree, int key, bool verbose);
 int SPT_height(SPTree* tree);
 void SPT_print(SPTree* tree);
+void SPT_print_stats(SPTree* tree);
 
 #endif

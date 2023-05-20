@@ -36,5 +36,7 @@ int main() {
         }
     }
 
+    RBT_print_stats(tree);
+
     return 0;
 }

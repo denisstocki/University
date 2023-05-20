@@ -8,11 +8,24 @@
 char* left_trace; 
 char* right_trace; 
 
+int comp_ints(BSTree* tree, int i1, int i2) {
+    tree -> comparisons++;
+
+    if (i1 == i2) {
+        return 0;
+    } else if (i1 > i2) {
+        return 1;
+    } else {
+        return -1;
+    }    
+}
+
 BSTree* BST_create_tree() {
     BSTree* tree = (BSTree*) malloc(sizeof(BSTree));
 
     tree -> root = NULL;
     tree -> size = 0;
+    tree -> comparisons = 0;
 
     return tree;
 }
@@ -25,13 +38,13 @@ Node* BST_find_submin(Node* node) {
     return node;
 }
 
-Node* BST_delete_handler(Node* node, int key, bool *found) {
+Node* BST_delete_handler(Node* node, int key, bool *found, BSTree* tree) {
     if (node == NULL) {
         return NULL;
-    } else if (key < node -> key) {
-        node -> left = BST_delete_handler(node -> left, key, found);
-    } else if (key > node -> key) {
-        node -> right = BST_delete_handler(node -> right, key, found);
+    } else if (comp_ints(tree, key, node -> key) == -1) {
+        node -> left = BST_delete_handler(node -> left, key, found, tree);
+    } else if (comp_ints(tree, key, node -> key) == 1) {
+        node -> right = BST_delete_handler(node -> right, key, found, tree);
     } else {
         *found = true;
 
@@ -49,7 +62,7 @@ Node* BST_delete_handler(Node* node, int key, bool *found) {
         } else {
             Node* min_r = BST_find_submin(node -> right);
             node -> key = min_r -> key;
-            node -> right = BST_delete_handler(node -> right, min_r -> key, found);
+            node -> right = BST_delete_handler(node -> right, min_r -> key, found, tree);
         } 
     }
     
@@ -66,7 +79,7 @@ int BST_delete(BSTree* tree, int key, bool verbose) {
     
     bool found = false;
 
-    tree -> root = BST_delete_handler(tree -> root, key, &found);
+    tree -> root = BST_delete_handler(tree -> root, key, &found, tree);
 
     if (found) {
         if (verbose) {
@@ -96,17 +109,17 @@ int BST_height(BSTree* tree) {
     return 1 + BST_height_handler(tree -> root);
 }
 
-void BST_insert_handler(Node** node, int key) {
+void BST_insert_handler(Node** node, int key, BSTree* tree) {
     if (*node == NULL) {
         *node = (Node*) malloc(sizeof(Node));
         (*node) -> key = key;
         (*node) -> left = NULL;
         (*node) -> right = NULL;
     } else {
-        if (key < (*node) -> key) {
-            BST_insert_handler(&(*node) -> left, key);
+        if (comp_ints(tree, key, (*node) -> key) == -1) {
+            BST_insert_handler(&(*node) -> left, key, tree);
         } else {
-            BST_insert_handler(&(*node) -> right, key);
+            BST_insert_handler(&(*node) -> right, key, tree);
         }
     }
 }
@@ -116,7 +129,7 @@ void BST_insert(BSTree* tree, int key, bool verbose) {
         printf("INSERT: %d\n", key);
     }
 
-    BST_insert_handler(&(tree -> root), key);
+    BST_insert_handler(&(tree -> root), key, tree);
     tree -> size++;
 }
 
@@ -179,4 +192,9 @@ void BST_print(BSTree* tree) {
     BST_print_handler(tree -> root, 0, '-');
     printf("------------------ Tree ------------------\n");
     printf("\n");
+}
+
+void BST_print_stats(BSTree* tree) {
+    printf("COMPARISONS: %lld\n", tree -> comparisons);
+    printf("HEIGHT: %d\n", BST_height(tree));
 }
