@@ -16,8 +16,8 @@ struct bstree {
 };
 
 BSTree* BST_create_tree();
-void BST_insert(BSTree* tree, int key);
-int BST_delete(BSTree* tree, int key);
+void BST_insert(BSTree* tree, int key, bool verbose);
+int BST_delete(BSTree* tree, int key, bool verbose);
 int BST_height(BSTree* tree);
 void BST_print(BSTree* tree);
 

@@ -56,9 +56,11 @@ Node* BST_delete_handler(Node* node, int key, bool *found) {
     return node;
 }
 
-int BST_delete(BSTree* tree, int key) {
+int BST_delete(BSTree* tree, int key, bool verbose) {
     if (tree -> root == NULL) {
-        printf("DELETE: %d (TREE IS EMPTY)\n", key);
+        if (verbose) {
+            printf("DELETE: %d (TREE IS EMPTY)\n", key);
+        }
         return 0;
     }
     
@@ -67,11 +69,15 @@ int BST_delete(BSTree* tree, int key) {
     tree -> root = BST_delete_handler(tree -> root, key, &found);
 
     if (found) {
-        printf("DELETE: %d\n", key);
+        if (verbose) {
+            printf("DELETE: %d\n", key);
+        }
         tree -> size--;
         return 1;
     } else {
-        printf("DELETE: %d (NO SUCH ELEMENT)\n", key);
+        if (verbose) {
+            printf("DELETE: %d (NO SUCH ELEMENT)\n", key);
+        }
         return -1;
     }
 }
@@ -105,8 +111,11 @@ void BST_insert_handler(Node** node, int key) {
     }
 }
 
-void BST_insert(BSTree* tree, int key) {
-    printf("INSERT: %d\n", key);
+void BST_insert(BSTree* tree, int key, bool verbose) {
+    if (verbose) {
+        printf("INSERT: %d\n", key);
+    }
+
     BST_insert_handler(&(tree -> root), key);
     tree -> size++;
 }
