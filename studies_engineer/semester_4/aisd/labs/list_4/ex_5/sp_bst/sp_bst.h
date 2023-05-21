@@ -16,6 +16,8 @@ struct sptree {
     Node* root;
     int size;
     long long comparisons;
+    long long reads;
+    long long assignments;
 };
 
 SPTree* SPT_create_tree();

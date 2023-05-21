@@ -41,8 +41,12 @@ def calculate_statistics(data):
             comparisons = (int(line.split(":")[1].strip()))
         elif line.startswith("HEIGHT:"):
             heights = (int(line.split(":")[1].strip()))
+        elif line.startswith("READS:"):
+            reads = (int(line.split(":")[1].strip()))
+        elif line.startswith("ASSIGNMENTS:"):
+            assignments = (int(line.split(":")[1].strip()))
     
-    return comparisons, heights
+    return comparisons, heights, reads, assignments
 
 for i in range(len(path_arr)):
     for j in range(len(gens_arr)):
@@ -61,20 +65,26 @@ for i in range(len(path_arr)):
         for n in range(start, end, inc):
             comparisons_list = []
             heights_list = []
+            reads_list = []
+            assignments_list = []
     
             for _ in range(20):
                 output = run_program(n, path_arr[i], gens_arr[j])
-                comparisons, heights = calculate_statistics(output)
+                comparisons, heights, reads, assignments = calculate_statistics(output)
                 comparisons_list.append(comparisons)
                 heights_list.append(heights)
+                reads_list.append(reads)
+                assignments_list.append(assignments)                
     
             avg_comparisons = mean(comparisons_list)
             max_comparisons = max(comparisons_list)
             avg_heights = mean(heights_list)
             max_heights = max(heights_list)
+            avg_reads = mean(reads_list)
+            max_reads = max(reads_list)
+            avg_assignments = mean(assignments_list)
+            max_assignments = max(assignments_list)
 
-            print(f"{path_arr[i]} {gens_arr[j]} {n}")
-
-            results.append(f"{n}, {avg_comparisons}, {max_comparisons}, {avg_heights}, {max_heights}")
+            results.append(f"{n}, {avg_comparisons}, {max_comparisons}, {avg_heights}, {max_heights}, {avg_reads}, {max_reads}, {avg_assignments}, {max_assignments}")
 
         save_results(path_out_arr[i] + name_out[j], results)

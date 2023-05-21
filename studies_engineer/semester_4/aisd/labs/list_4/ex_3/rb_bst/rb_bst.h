@@ -19,6 +19,8 @@ struct tree {
     Node* NIL;
     int size;
     long long comparisons;
+    long long reads;
+    long long assignments;
 };
 
 RBTree* RBT_create_tree();

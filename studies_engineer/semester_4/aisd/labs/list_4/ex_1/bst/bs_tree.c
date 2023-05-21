@@ -30,8 +30,13 @@ BSTree* BST_create_tree() {
     return tree;
 }
 
-Node* BST_find_submin(Node* node) {
+Node* BST_find_submin(Node* node, BSTree* tree) {
+    tree -> reads++;
+
     while (node -> left != NULL) {
+        tree -> reads++;
+        tree -> assignments++;
+
         node = node -> left;
     }
     
@@ -42,11 +47,20 @@ Node* BST_delete_handler(Node* node, int key, bool *found, BSTree* tree) {
     if (node == NULL) {
         return NULL;
     } else if (comp_ints(tree, key, node -> key) == -1) {
+        tree -> assignments++;
+        tree -> reads++;
+
         node -> left = BST_delete_handler(node -> left, key, found, tree);
     } else if (comp_ints(tree, key, node -> key) == 1) {
+        tree -> assignments++;
+        tree -> reads++;
+
         node -> right = BST_delete_handler(node -> right, key, found, tree);
     } else {
         *found = true;
+
+        tree -> reads+=2;
+        tree -> assignments++;
 
         if (node -> left == NULL && node -> right == NULL) {
             free(node);
@@ -60,7 +74,7 @@ Node* BST_delete_handler(Node* node, int key, bool *found, BSTree* tree) {
             node = node -> left;
             free(temp);
         } else {
-            Node* min_r = BST_find_submin(node -> right);
+            Node* min_r = BST_find_submin(node -> right, tree);
             node -> key = min_r -> key;
             node -> right = BST_delete_handler(node -> right, min_r -> key, found, tree);
         } 
@@ -111,11 +125,15 @@ int BST_height(BSTree* tree) {
 
 void BST_insert_handler(Node** node, int key, BSTree* tree) {
     if (*node == NULL) {
+        tree -> assignments+=3;
+
         *node = (Node*) malloc(sizeof(Node));
         (*node) -> key = key;
         (*node) -> left = NULL;
         (*node) -> right = NULL;
     } else {
+        tree -> reads++;
+
         if (comp_ints(tree, key, (*node) -> key) == -1) {
             BST_insert_handler(&(*node) -> left, key, tree);
         } else {
@@ -197,4 +215,6 @@ void BST_print(BSTree* tree) {
 void BST_print_stats(BSTree* tree) {
     printf("COMPARISONS: %lld\n", tree -> comparisons);
     printf("HEIGHT: %d\n", BST_height(tree));
+    printf("READS: %lld\n", tree -> reads);
+    printf("ASSIGNMENTS: %lld\n", tree -> assignments);
 }

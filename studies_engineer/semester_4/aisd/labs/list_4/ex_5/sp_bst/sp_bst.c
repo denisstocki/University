@@ -25,6 +25,8 @@ SPTree* SPT_create_tree() {
 
     tree -> root = NULL;
     tree -> size = 0;
+    tree -> reads = 0;
+    tree -> assignments = 0;
 
     return tree;
 }
@@ -53,7 +55,10 @@ int SPT_height(SPTree* tree) {
     return 1 + SPT_height_handler(tree -> root);
 }
 
-Node* SPT_right_rotate(Node* x) {
+Node* SPT_right_rotate(Node* x, SPTree* tree) {
+    tree -> assignments+=3;
+    tree -> reads+=2;
+
     Node* y = x -> left;
 
     x -> left = y -> right;
@@ -62,7 +67,10 @@ Node* SPT_right_rotate(Node* x) {
     return y;
 }
  
-Node* SPT_left_rotate(Node* x) {
+Node* SPT_left_rotate(Node* x, SPTree* tree) {
+    tree -> assignments+=3;
+    tree -> reads+=2;
+
     Node* y = x -> right;
 
     x -> right = y -> left;
@@ -78,30 +86,60 @@ Node* SPT_splay(Node* node, int key, SPTree* tree) {
     }
     
     if (comp_ints(tree, key, node -> key) == -1){
+        tree -> reads++;
+
         if (node -> left == NULL) { return node; }
         
         if (comp_ints(tree, node -> left -> key, key) == 1) {
+            tree -> assignments+=2;
+            tree -> reads+=2;
+
             node -> left -> left = SPT_splay(node -> left -> left, key, tree);
-            node = SPT_right_rotate(node);
+            node = SPT_right_rotate(node, tree);
         } else {
+            tree -> assignments+=1;
+            tree -> reads+=2;
+
             node -> left -> right = SPT_splay(node -> left -> right, key, tree);
-            if (node -> left -> right != NULL) { node -> left = SPT_left_rotate(node -> left); }
+            if (node -> left -> right != NULL) { 
+                tree -> assignments++;
+                tree -> reads++;
+
+                node -> left = SPT_left_rotate(node -> left, tree); 
+            }
         }
         
-        return (node -> left == NULL) ? node : SPT_right_rotate(node);
+        tree -> reads++;
+
+        return (node -> left == NULL) ? node : SPT_right_rotate(node, tree);
     } else {
+        tree -> reads++;
+
         if (node -> right == NULL) { return node; }
     
         if (comp_ints(tree, node -> right -> key, key) == 1) {
+            tree -> assignments+=1;
+            tree -> reads+=2;
+
             node -> right -> left = SPT_splay(node -> right -> left, key, tree);
  
-            if (node -> right -> left != NULL) { node -> right = SPT_right_rotate(node -> right); }
+            if (node -> right -> left != NULL) { 
+                tree -> assignments+=1;
+                tree -> reads++;
+
+                node -> right = SPT_right_rotate(node -> right, tree); 
+            }
         } else {
+            tree -> assignments+=2;
+            tree -> reads++;
+
             node -> right -> right = SPT_splay(node -> right -> right, key, tree);
-            node = SPT_left_rotate(node);
+            node = SPT_left_rotate(node, tree);
         }
     
-        return (node -> right == NULL) ? node : SPT_left_rotate(node);
+        tree -> reads++;
+
+        return (node -> right == NULL) ? node : SPT_left_rotate(node, tree);
     }
 }
 
@@ -114,6 +152,8 @@ int SPT_delete(SPTree* tree, int key, bool verbose) {
         return -1;
     }
     
+    tree -> assignments+=1;
+        
     tree -> root = SPT_splay(tree -> root, key, tree);
 
     if (comp_ints(tree, key, tree -> root -> key) != 0) {
@@ -125,10 +165,18 @@ int SPT_delete(SPTree* tree, int key, bool verbose) {
     
     Node* temp;
 
+
+    tree -> reads++;
+
     if (!(tree -> root -> left)) {
+        tree -> assignments+=2;
+        
         temp = tree -> root;
         tree -> root = tree -> root -> right;
     } else {
+        tree -> assignments+=3;
+        tree -> reads+=2;
+
         temp = tree -> root;
         tree -> root = SPT_splay(tree -> root -> left, key, tree);
         tree -> root -> right = temp -> right;
@@ -149,12 +197,16 @@ void SPT_insert(SPTree* tree, int key, bool verbose) {
         printf("INSERT: %d\n", key);
     }
 
+    tree -> assignments++;
+
     Node* node = SPT_create_node(key, NULL, NULL);
 
     if (tree -> root == NULL){
         tree -> root = node;
         return;
     }
+
+    tree -> assignments++;
 
     tree -> root = SPT_splay(tree -> root, key, tree);
 
@@ -167,6 +219,9 @@ void SPT_insert(SPTree* tree, int key, bool verbose) {
         node -> left = tree -> root;
         tree -> root -> right = NULL;
     }
+
+    tree -> assignments+=4;
+    tree -> reads++;
 
     tree -> root = node;
 }
@@ -226,4 +281,6 @@ void SPT_print(SPTree* tree) {
 void SPT_print_stats(SPTree* tree) {
     printf("COMPARISONS: %lld\n", tree -> comparisons);
     printf("HEIGHT: %d\n", SPT_height(tree));
+    printf("READS: %lld\n", tree -> reads);
+    printf("ASSIGNMENTS: %lld\n", tree -> assignments);
 }

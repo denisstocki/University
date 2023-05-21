@@ -2,9 +2,9 @@ import matplotlib.pyplot as plt
 
 files = ['av_case.txt', 'worst_case.txt']
 
-names = ['av_comps.jpg', 'max_comps.jpg', 'av_heights.jpg', 'max_heights.jpg']
+names = ['av_comps.jpg', 'max_comps.jpg', 'av_heights.jpg', 'max_heights.jpg', 'av_reads.jpg', 'max_reads.jpg', 'av_assignments.jpg', 'max_assignments.jpg']
 
-titles = ['Average Comparisons', 'Max Comparisons', 'Average Heights', 'Max Heights']
+titles = ['Average Comparisons', 'Max Comparisons', 'Average Heights', 'Max Heights', 'Average Reads', 'Max Reads', 'Average Assignments', 'Max Assignments']
 
 colors = ['red', 'blue', 'green']
 

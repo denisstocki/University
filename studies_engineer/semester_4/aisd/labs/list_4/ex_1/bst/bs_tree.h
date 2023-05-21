@@ -14,6 +14,8 @@ struct bstree {
     Node* root;
     int size;
     long long comparisons;
+    long long reads;
+    long long assignments;
 };
 
 BSTree* BST_create_tree();
