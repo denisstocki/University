@@ -44,11 +44,15 @@ RBTree* RBT_create_tree() {
 Node* RBT_search(RBTree* tree, int key) {
     Node* node = tree -> root;
 
-    while (node != tree -> NIL && key != node -> key) {
-        if (comp_ints(tree, key, node -> key) == -1) {
-            node = node -> left;
+    while (node != tree -> NIL) {
+        int cmp = comp_ints(tree, key, node->key);
+        
+        if (cmp == 0) {
+            return node;
+        } else if (cmp < 0) {
+            node = node->left;
         } else {
-            node = node -> right;
+            node = node->right;
         }
     }
 

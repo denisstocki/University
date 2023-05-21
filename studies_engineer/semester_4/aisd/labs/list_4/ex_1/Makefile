@@ -12,7 +12,7 @@ BST_HEADER = $(BST_DIR)/bs_tree.h
 BST_OBJ = $(BST_DIR)/bs_tree.o
 
 # Nazwa wyjściowego pliku wykonywalnego
-TARGET = ex1
+TARGET = ex
 
 all: $(TARGET)
 

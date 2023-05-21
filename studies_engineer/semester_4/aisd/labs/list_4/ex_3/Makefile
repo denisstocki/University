@@ -12,7 +12,7 @@ BST_HEADER = $(BST_DIR)/rb_bst.h
 BST_OBJ = $(BST_DIR)/rb_bst.o
 
 # Nazwa wyjściowego pliku wykonywalnego
-TARGET = ex3
+TARGET = ex
 
 all: $(TARGET)
 
