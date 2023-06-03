@@ -20,6 +20,7 @@ int main (int argc, char *argv[]) {
     options_t opts = parse_options(argc, argv);
 
     if (opts.option == 1){
+        printf("\n");
         printf("Programme summoned with options -d --ss --oss.\n");
         printf("\n");
         printf("Options values:\n");
@@ -30,6 +31,7 @@ int main (int argc, char *argv[]) {
         printf("\n");
         sp_time_problem(opts, argv[0]);
     } else if (opts.option == 2) {
+        printf("\n");
         printf("Programme summoned with options -d --p2p --op2p.\n");
         printf("\n");
         printf("Options values:\n");
@@ -61,19 +63,29 @@ void sp_time_problem(options_t opts, char *programme_name) {
     int i;
     int num_vertexes, num_edges;
 
+    printf("------------------Scanning------------------\n");
+
     for (i = 0; i < lines_d.count; i++) {
+        printf("%s", lines_d.lines[i]);
         if (strncmp(lines_d.lines[i], "p sp", 4) == 0) {
             sscanf(lines_d.lines[i], "p sp %d %d", &num_vertexes, &num_edges);  
             break;
         }
     }
 
+    printf("------------------Scanning------------------\n");
+    printf("\n");
+
     Graph* graph = create_graph(num_vertexes);
 
     int counter_a = 0;
     int src, dest, cost;
 
+    printf("------------------Scanning------------------\n");
+
+    i++;
     while (counter_a < num_edges) {
+        printf("%s", lines_d.lines[i]);
         if (strncmp(lines_d.lines[i], "a ", 2) == 0) {
             sscanf(lines_d.lines[i], "a %d %d %d", &src, &dest, &cost);
             add_edge(graph, src, dest, cost);
@@ -81,22 +93,34 @@ void sp_time_problem(options_t opts, char *programme_name) {
         }
         i++;
     }
+
+    printf("------------------Scanning------------------\n");
+    printf("\n");
     
     print_graph(graph);
 
     int num_sources;
 
+    printf("------------------Scanning------------------\n");
+
     for (i = 0; i < lines_ss.count; i++) {
+        printf("%s", lines_ss.lines[i]);
         if (strncmp(lines_ss.lines[i], "p aux sp ss ", 12) == 0) {
             sscanf(lines_ss.lines[i], "p aux sp ss %d", &num_sources);
             break;
         }
     }
+
+    printf("------------------Scanning------------------\n");
+    printf("\n");
     
     int counter_sources = 0;
     int *sources = (int*) malloc(num_sources * sizeof(int));
 
+    printf("------------------Scanning------------------\n");
+
     while (counter_sources < num_sources) {
+        printf("%s", lines_ss.lines[i]);
         if (strncmp(lines_ss.lines[i], "s ", 2) == 0) {
             int source;
             sscanf(lines_ss.lines[i], "s %d", &source);
@@ -106,8 +130,14 @@ void sp_time_problem(options_t opts, char *programme_name) {
         i++;
     }
 
+    printf("------------------Scanning------------------\n");
+    printf("\n");
+
     for (int i = 0; i < num_sources; i++) {
+        printf("------------------Source%i------------------\n", i + 1);
+        printf("SOURCE: %d\n", sources[i]);
         find_all_sp(graph, sources[i]);
+        printf("\n");
     }
 }
 
@@ -128,26 +158,35 @@ void find_all_sp(Graph* graph, int source) {
 
     while (minheap -> size > 0) {
         printHeap(minheap);
+        printf("Extracting minimum\n");
         int u = extractMin(minheap);
+        printf("Marking visited, minimum: %d\n", u);
         visited[u] = 1;
 
         Vertex* current = graph -> adjacency_list[u];
 
+        printf("Iterating over neigbours\n");
         while (current != NULL) {
+            printf("Neighbour %d\n", current -> value);
             int v = current -> value;
             int weight = current -> weight;
-
+            printf("Checking better distance\n");
             if (distance[u] != INT_MAX && distance[u] + weight < distance[v]) {
+                printf("Assigning new distance\n");
                 distance[v] = distance[u] + weight;
             }
 
+            printf("Checking if visited\n");
             if (!visited[v]) {
+                printf("Assigning if not visited\n");
                 insert(minheap, v);
+                printf("Inserting into heap\n");
             }
             
             current = current -> next;
         }
     }
+    printf("Heap is empty\n");
 
     printf("------------------ Paths ------------------\n");
     printf("Source: %d\n", source);
