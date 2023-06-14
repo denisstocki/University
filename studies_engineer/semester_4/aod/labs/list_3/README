@@ -1,12 +1,29 @@
-Denis Stocki 268439
-2023-05-12
-
-Pliki:
-
-- Makefile
-
-Kompilator: Apple clang version 14.0.3
-
-Wywołanie serwera:
-
-Wywołanie klienta:
+======================
+AUTHOR: Denis Stocki
+======================
+FILES DESCRIPTION:
+    charts - generated charts for the tests from a given website
+    control - main programme controlling whole process
+    data - the tests downloaded from website
+    flow - subprogrammes used to evauluate programme's options and data
+    graph - subprogrammes for graph usage
+    scripts - python scripts used to generate charts
+    test - a sample test given in the pdf
+======================
+USAGE:
+Available targets:
+  all           : Compile and create the JAR file
+  clean         : Remove compiled classes and JAR file
+  run           : Run the program from the JAR file
+  run_dijkstra_time  : Run the dijkstra algorithm with specified input files (-d -ss -oss)
+  run_diala_time     : Run the diala algorithm with specified input files (-d -ss -oss)
+  run_radix_time     : Run the radix algorithm with specified input files (-d -ss -oss)
+  run_dijkstra_path  : Run the dijkstra algorithm with specified input files (-d -p2p -op2p)
+  run_diala_path     : Run the diala algorithm with specified input files (-d -p2p -op2p)
+  run_radix_path     : Run the radix algorithm with specified input files (-d -p2p -op2p)
+  run_ss_res         : Generate .ss.res files in each folder
+  run_p2p_res        : Generate .p2p.res files in each folder
+  gen_charts     : Generate charts based on .ss files
+  help          : Display this help message
+=====================
+In case you forget how to use this package type 'make help' in your terminal
